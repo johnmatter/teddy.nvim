@@ -1,6 +1,6 @@
-# terminal_pdf.nvim
+# teddy.nvim
 
-A Neovim plugin for viewing PDF files in the terminal.
+TEDDY: TErminal Document DisplaY - A Neovim plugin for viewing PDF files in the terminal.
 
 ## Installation
 
@@ -8,9 +8,9 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "johnmatter/terminal_pdf.nvim",
+  "johnmatter/teddy.nvim",
   config = function()
-    require("terminal_pdf").setup({
+    require("teddy").setup({
       -- Optional configuration
       cache_dir = vim.fn.stdpath("cache") .. "/pdf_preview",
       max_cache_size_mb = 100,
@@ -26,7 +26,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 -- View a PDF file
-require("terminal_pdf").view_pdf("path/to/your/file.pdf")
+require("teddy").view_pdf("path/to/your/file.pdf")
 ```
 
 ## Requirements
@@ -38,4 +38,4 @@ require("terminal_pdf").view_pdf("path/to/your/file.pdf")
 
 When viewing a PDF:
 - `j` or `<C-f>` - Next page
-- `k` or `<C-b>` - Previous page 
+- `k` or `<C-b>` - Previous page

@@ -1,7 +1,7 @@
 local M = {}
 
-local viewer = require("terminal_pdf.viewer")
-local config = require("terminal_pdf.config")
+local viewer = require("teddy.viewer")
+local config = require("teddy.config")
 
 function M.setup(user_config)
   config.setup(user_config)

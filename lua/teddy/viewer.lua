@@ -1,4 +1,4 @@
-local config = require("terminal_pdf.config").options
+local config = require("teddy.config").options
 local uv = vim.loop
 local M = {}
 
