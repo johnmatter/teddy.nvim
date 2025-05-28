@@ -6,6 +6,7 @@ M.options = {
   viewer_cmd = "viu",
   pdf_renderer = "pdftoppm",
   page_padding = 2,
+  auto_open = true,
 }
 
 function M.setup(user_config)
