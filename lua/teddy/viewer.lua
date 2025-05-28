@@ -19,28 +19,20 @@ local function render_page(page)
     os.execute(cmd)
   end
 
-  -- Reuse existing buffer if possible
+  -- Create new buffer for terminal
   if state.bufnr and vim.api.nvim_buf_is_valid(state.bufnr) then
-    -- Close the existing buffer to reset it
-    vim.api.nvim_buf_close(state.bufnr, {})
-  else
-    state.bufnr = vim.api.nvim_create_buf(false, true)
+    -- Delete the existing buffer
+    vim.api.nvim_buf_delete(state.bufnr, { force = true })
   end
-
+  
+  state.bufnr = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_set_current_buf(state.bufnr)
+  
   local term_cmd = string.format("%s '%s'", config.viewer_cmd, image_path)
   vim.fn.termopen(term_cmd, { buffer = state.bufnr })
 end
 
 local function redraw()
-  -- Reuse existing buffer instead of creating new ones
-  if state.bufnr and vim.api.nvim_buf_is_valid(state.bufnr) then
-    -- Reset the buffer content but keep the same handle
-    vim.api.nvim_buf_clear(state.bufnr)
-  else
-    state.bufnr = vim.api.nvim_create_buf(false, true)
-  end
-
-  vim.api.nvim_set_current_buf(state.bufnr)
   render_page(state.current_page)
   setup_keymaps(state.bufnr)
 end

@@ -9,16 +9,19 @@ function M.setup(user_config)
   
   -- Set up autocommand to handle PDF files automatically if enabled
   if config.options.auto_open then
-    vim.api.nvim_create_autocmd("BufReadPre", {
+    vim.api.nvim_create_autocmd("BufReadCmd", {
       pattern = "*.pdf",
       callback = function(args)
-        -- Prevent normal buffer reading
-        vim.api.nvim_buf_set_option(args.buf, "readonly", true)
-        vim.api.nvim_buf_set_option(args.buf, "modifiable", false)
+        local pdf_buf = args.buf
+        local pdf_file = args.file
         
         -- Load the PDF with teddy
         vim.schedule(function()
-          M.view_pdf(args.file)
+          M.view_pdf(pdf_file)
+          -- Delete the original buffer to avoid confusion
+          if vim.api.nvim_buf_is_valid(pdf_buf) then
+            vim.api.nvim_buf_delete(pdf_buf, { force = true })
+          end
         end)
       end,
       group = vim.api.nvim_create_augroup("TeddyPDF", { clear = true })
