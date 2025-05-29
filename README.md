@@ -46,18 +46,30 @@ require("teddy").view_pdf("path/to/your/file.pdf")
 ## Requirements
 
 - `pdftoppm` (from poppler-utils)
-- `viu` (terminal image viewer)
+- `viu` (terminal image viewer with sixel support)
 
 ### macOS
 ```
 brew install viu poppler
 ```
 
+**Note**: Make sure your terminal supports sixel graphics. Most modern terminals like iTerm2, Alacritty, and WezTerm support sixel.
+
 ### Alternative Image Viewers
 
 If you have issues with `viu`, you can try these alternatives:
 
 ```lua
+-- Using img2sixel (dedicated sixel converter)
+require("teddy").setup({
+  viewer_cmd = "img2sixel",
+})
+
+-- Using chafa with sixel output
+require("teddy").setup({
+  viewer_cmd = "chafa --format sixel",
+})
+
 -- Using chafa (often works better in some terminals)
 require("teddy").setup({
   viewer_cmd = "chafa --size 80x24",
@@ -71,6 +83,9 @@ require("teddy").setup({
 
 Install alternatives:
 ```bash
+# For img2sixel
+brew install libsixel
+
 # For chafa
 brew install chafa
 
