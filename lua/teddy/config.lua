@@ -3,8 +3,11 @@ local M = {}
 M.options = {
   cache_dir = vim.fn.stdpath("cache") .. "/pdf_preview",
   max_cache_size_mb = 100,
-  viewer_cmd = "chafa --size 120x60",
+  viewer_cmd = "chafa",
+  chafa_width = 1280,
+  chafa_height = 720,
   pdf_renderer = "pdftoppm",
+  pdf_dpi = 300,
   page_padding = 2,
   auto_open = true,
 }
