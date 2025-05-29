@@ -35,31 +35,38 @@ local function render_page(page)
   
   vim.api.nvim_set_current_buf(state.bufnr)
   
-  -- Use sixel output for better image display
+  -- Capture chafa output directly and insert into buffer
   local sixel_cmd = string.format("%s --format symbols --size %dx%d '%s'", 
     config.viewer_cmd, config.chafa_width, config.chafa_height, image_path)
-  vim.fn.termopen(sixel_cmd, { 
-    buffer = state.bufnr,
-    on_exit = function()
-      -- Add info after sixel renders
-      vim.schedule(function()
-        if vim.api.nvim_buf_is_valid(state.bufnr) then
-          local info_lines = {
-            "",
-            "=== TEDDY PDF Viewer ===",
-            "File: " .. vim.fn.fnamemodify(state.pdf_path, ":t"),
-            "Page: " .. page,
-            "Controls: j/k or Ctrl-f/Ctrl-b to navigate",
-            "========================"
-          }
-          
-          vim.api.nvim_buf_set_option(state.bufnr, "modifiable", true)
-          vim.api.nvim_buf_set_lines(state.bufnr, -1, -1, false, info_lines)
-          vim.api.nvim_buf_set_option(state.bufnr, "modifiable", false)
-        end
-      end)
-    end
-  })
+  
+  local handle = io.popen(sixel_cmd)
+  local chafa_output = handle:read("*a")
+  handle:close()
+  
+  -- Split output into lines and insert into buffer
+  local lines = {}
+  for line in chafa_output:gmatch("[^\r\n]*") do
+    table.insert(lines, line)
+  end
+  
+  -- Add header info
+  local info_lines = {
+    "=== TEDDY PDF Viewer ===",
+    "File: " .. vim.fn.fnamemodify(state.pdf_path, ":t"),
+    "Page: " .. page,
+    "Controls: j/k or Ctrl-f/Ctrl-b to navigate",
+    "========================",
+    ""
+  }
+  
+  -- Combine header and image
+  for i, line in ipairs(info_lines) do
+    table.insert(lines, i, line)
+  end
+  
+  vim.api.nvim_buf_set_option(state.bufnr, "modifiable", true)
+  vim.api.nvim_buf_set_lines(state.bufnr, 0, -1, false, lines)
+  vim.api.nvim_buf_set_option(state.bufnr, "modifiable", false)
 end
 
 local function redraw()
