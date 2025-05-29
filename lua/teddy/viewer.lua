@@ -28,41 +28,35 @@ local function render_page(page)
   state.bufnr = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_set_current_buf(state.bufnr)
   
-  -- Capture viu output and display it in the buffer
-  local viu_cmd = string.format("%s --static --transparent --width 80 '%s'", config.viewer_cmd, image_path)
-  local output = vim.fn.system(viu_cmd)
-  local exit_code = vim.v.shell_error
-  
-  -- Check if viu failed and provide fallback
-  if exit_code ~= 0 or output == "" then
-    output = "Error: Could not display image with viu\nCommand: " .. viu_cmd .. "\nExit code: " .. exit_code
-  end
-  
-  -- Split output into lines and set buffer content
-  local lines = vim.split(output, '\n')
-  vim.api.nvim_buf_set_lines(state.bufnr, 0, -1, false, lines)
+  -- Use sixel output for better image display
+  local sixel_cmd = string.format("%s '%s'", config.viewer_cmd, image_path)
+  vim.fn.termopen(sixel_cmd, { 
+    buffer = state.bufnr,
+    on_exit = function()
+      -- Add info after sixel renders
+      vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(state.bufnr) then
+          local info_lines = {
+            "",
+            "=== TEDDY PDF Viewer ===",
+            "File: " .. vim.fn.fnamemodify(state.pdf_path, ":t"),
+            "Page: " .. page,
+            "Controls: j/k or Ctrl-f/Ctrl-b to navigate",
+            "========================"
+          }
+          
+          vim.api.nvim_buf_set_option(state.bufnr, "modifiable", true)
+          vim.api.nvim_buf_set_lines(state.bufnr, -1, -1, false, info_lines)
+          vim.api.nvim_buf_set_option(state.bufnr, "modifiable", false)
+        end
+      end)
+    end
+  })
   
   -- Set buffer options for better viewing
-  vim.api.nvim_buf_set_option(state.bufnr, "modifiable", false)
-  vim.api.nvim_buf_set_option(state.bufnr, "readonly", true)
   vim.api.nvim_buf_set_option(state.bufnr, "buftype", "nofile")
   vim.api.nvim_buf_set_option(state.bufnr, "bufhidden", "wipe")
   vim.api.nvim_buf_set_option(state.bufnr, "swapfile", false)
-  
-  -- Add some info about the PDF
-  local info_lines = {
-    "=== TEDDY PDF Viewer ===",
-    "File: " .. vim.fn.fnamemodify(state.pdf_path, ":t"),
-    "Page: " .. page,
-    "Controls: j/k or Ctrl-f/Ctrl-b to navigate",
-    "========================",
-    ""
-  }
-  
-  -- Insert info at the beginning
-  vim.api.nvim_buf_set_option(state.bufnr, "modifiable", true)
-  vim.api.nvim_buf_set_lines(state.bufnr, 0, 0, false, info_lines)
-  vim.api.nvim_buf_set_option(state.bufnr, "modifiable", false)
 end
 
 local function redraw()
