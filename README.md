@@ -53,6 +53,31 @@ require("teddy").view_pdf("path/to/your/file.pdf")
 brew install viu poppler
 ```
 
+### Alternative Image Viewers
+
+If you have issues with `viu`, you can try these alternatives:
+
+```lua
+-- Using chafa (often works better in some terminals)
+require("teddy").setup({
+  viewer_cmd = "chafa --size 80x24",
+})
+
+-- Using img2txt (from libcaca-dev)
+require("teddy").setup({
+  viewer_cmd = "img2txt -W 80 -H 24",
+})
+```
+
+Install alternatives:
+```bash
+# For chafa
+brew install chafa
+
+# For img2txt (libcaca)
+brew install libcaca
+```
+
 ## Keybindings
 
 When viewing a PDF:

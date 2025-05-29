@@ -29,8 +29,14 @@ local function render_page(page)
   vim.api.nvim_set_current_buf(state.bufnr)
   
   -- Capture viu output and display it in the buffer
-  local viu_cmd = string.format("%s '%s'", config.viewer_cmd, image_path)
+  local viu_cmd = string.format("%s --static --transparent --width 80 '%s'", config.viewer_cmd, image_path)
   local output = vim.fn.system(viu_cmd)
+  local exit_code = vim.v.shell_error
+  
+  -- Check if viu failed and provide fallback
+  if exit_code ~= 0 or output == "" then
+    output = "Error: Could not display image with viu\nCommand: " .. viu_cmd .. "\nExit code: " .. exit_code
+  end
   
   -- Split output into lines and set buffer content
   local lines = vim.split(output, '\n')
