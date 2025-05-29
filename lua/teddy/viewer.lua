@@ -26,6 +26,12 @@ local function render_page(page)
   end
   
   state.bufnr = vim.api.nvim_create_buf(false, true)
+
+  -- Set buffer options before termopen potentially makes it nomodifiable
+  vim.api.nvim_buf_set_option(state.bufnr, "buftype", "nofile")
+  vim.api.nvim_buf_set_option(state.bufnr, "bufhidden", "wipe")
+  vim.api.nvim_buf_set_option(state.bufnr, "swapfile", false)
+  
   vim.api.nvim_set_current_buf(state.bufnr)
   
   -- Use sixel output for better image display
@@ -52,11 +58,6 @@ local function render_page(page)
       end)
     end
   })
-  
-  -- Set buffer options for better viewing
-  vim.api.nvim_buf_set_option(state.bufnr, "buftype", "nofile")
-  vim.api.nvim_buf_set_option(state.bufnr, "bufhidden", "wipe")
-  vim.api.nvim_buf_set_option(state.bufnr, "swapfile", false)
 end
 
 local function redraw()
