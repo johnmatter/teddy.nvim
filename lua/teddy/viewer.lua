@@ -36,7 +36,7 @@ local function render_page(page)
   vim.api.nvim_set_current_buf(state.bufnr)
   
   -- Capture chafa output directly and insert into buffer
-  local sixel_cmd = string.format("%s --format symbols --color-space off --size %dx%d '%s'", 
+  local sixel_cmd = string.format("%s --format symbols --colors 1 --size %dx%d '%s'", 
     config.viewer_cmd, config.chafa_width, config.chafa_height, image_path)
   
   local handle = io.popen(sixel_cmd)
