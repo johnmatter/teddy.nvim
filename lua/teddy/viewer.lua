@@ -36,7 +36,7 @@ local function render_page(page)
   vim.api.nvim_set_current_buf(state.bufnr)
   
   -- Use sixel output for better image display
-  local sixel_cmd = string.format("%s --size %dx%d '%s'", 
+  local sixel_cmd = string.format("%s --format symbols --size %dx%d '%s'", 
     config.viewer_cmd, config.chafa_width, config.chafa_height, image_path)
   vim.fn.termopen(sixel_cmd, { 
     buffer = state.bufnr,
