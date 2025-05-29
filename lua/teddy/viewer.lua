@@ -15,7 +15,7 @@ local function render_page(page)
   local image_path = string.format("%s/page_%d.png", cache_dir, page)
 
   if vim.fn.filereadable(image_path) == 0 then
-    local cmd = string.format("%s -f %d -l %d -singlefile -png '%s' '%s/page_%d'", config.pdf_renderer, page, page, state.pdf_path, cache_dir, page)
+    local cmd = string.format("%s -f %d -l %d -singlefile -png -r 300 '%s' '%s/page_%d'", config.pdf_renderer, page, page, state.pdf_path, cache_dir, page)
     os.execute(cmd)
   end
 
