@@ -2,6 +2,8 @@
 
 TEDDY: TErminal Document DisplaY - A Neovim plugin for viewing PDF files in the terminal.
 
+DISCLAIMER: this is NOT functional yet
+
 ## Installation
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
